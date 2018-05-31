@@ -1,4 +1,5 @@
 <?php
+use Prospress\ActionScheduler\Exception\InvalidAction;
 
 /**
  * Class ActionScheduler_wpPostStore
@@ -91,6 +92,12 @@ class ActionScheduler_wpPostStore extends ActionScheduler_Store {
 	protected function make_action_from_post( $post ) {
 		$hook = $post->post_title;
 		$args = json_decode( $post->post_content, true );
+
+		// Handle args that do not decode properly.
+		if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $args ) ) {
+			throw InvalidAction::from_decoding_args( $post->ID );
+		}
+
 		$schedule = get_post_meta( $post->ID, self::SCHEDULE_META_KEY, true );
 		if ( empty($schedule) ) {
 			$schedule = new ActionScheduler_NullSchedule();
