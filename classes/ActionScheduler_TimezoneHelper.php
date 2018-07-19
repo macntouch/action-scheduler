@@ -30,7 +30,8 @@ abstract class ActionScheduler_TimezoneHelper {
 							}
 						}
 					}
-					if ( false === $tzstring ) {
+
+					if ( empty( $tzstring ) ) {
 						$tzstring = 'UTC';
 					}
 				}
@@ -41,4 +42,3 @@ abstract class ActionScheduler_TimezoneHelper {
 		return self::$local_timezone;
 	}
 }
- 
